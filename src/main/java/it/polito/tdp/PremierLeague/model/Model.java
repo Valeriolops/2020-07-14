@@ -1,6 +1,9 @@
 package it.polito.tdp.PremierLeague.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.Graph;
@@ -43,8 +46,8 @@ public class Model {
 		for (Team t1 : grafo.vertexSet()) {
 			for( Team t2: grafo.vertexSet()) {
 				if(!t1.equals(t2)) {
-					Integer punteggioT1= mappaTeamPunteggio.get(t1);
-					Integer punteggioT2 = mappaTeamPunteggio.get(t2);
+					Integer punteggioT1= mappaClassifica.get(t1);
+					Integer punteggioT2 = mappaClassifica.get(t2);
 					Integer differenza = punteggioT1 - punteggioT2;
 					if(differenza > 0) {
 						Graphs.addEdgeWithVertices(grafo, t1, t2, differenza);
@@ -139,12 +142,51 @@ public class Model {
 	
 	
 	
+	public List<Team> getSquadra(){
+		List<Team>result= new ArrayList<Team>(grafo.vertexSet());
+		return result;
+	}
 	
 	
 	
 	
+	public List <Vicino> getVicinoPerDifferenzaPuntiPerdenti(Team squadraSelezionata){
+		
+		
+		List<Vicino> result = new ArrayList<Vicino>();
+		
+		for(DefaultWeightedEdge e : grafo.outgoingEdgesOf(squadraSelezionata)) {
+			Team perdente = grafo.getEdgeTarget(e);
+			Integer differenzaPunti= (int) grafo.getEdgeWeight(e);
+			Vicino v= new Vicino(perdente, differenzaPunti);
+			result.add(v);
+			
+			
+			
+		}
+		
+		
+		
+		Collections.sort(result);
+		return result ;
+		
+		
+	}
 	
 	
+	public List<Vicino> getVicinoPerDifferenzaPuntiVincente(Team teamSelezionato){
+		
+		List<Vicino> result = new ArrayList<Vicino>();
+		for(DefaultWeightedEdge e : this.grafo.incomingEdgesOf(teamSelezionato)) {
+			Team vincente = grafo.getEdgeSource(e);
+			Integer punti= (int) grafo.getEdgeWeight(e);
+			Vicino v= new Vicino(vincente, punti);
+			result.add(v);
+			
+		}
+		Collections.sort(result);
+		return result;
+	}
 	
 	
 	
