@@ -59,6 +59,7 @@ public class FXMLController {
     	model.creaGrafo();
     	txtResult.appendText("Grafo creato");
     	txtResult.appendText("\n # VERTICI :"+model.getNVertici());
+    	txtResult.appendText("\n #Archi :"+model.getNarchi());
     	model.creaClassifica();
     	
       txtResult.appendText("\n Classifica !!\n");

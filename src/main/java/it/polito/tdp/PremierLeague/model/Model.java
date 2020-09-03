@@ -6,6 +6,7 @@ import java.util.Map;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import it.polito.tdp.PremierLeague.db.PremierLeagueDAO;
@@ -36,8 +37,30 @@ public class Model {
 	
 	
 	public void creaGrafo() {
-		grafo = new SimpleWeightedGraph<Team, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+		grafo = new SimpleDirectedWeightedGraph<Team, DefaultWeightedEdge>(DefaultWeightedEdge.class);
 		Graphs.addAllVertices(grafo, dao.listAllTeams());
+		Map<Team,Integer>mappaClassifica=new HashMap<Team, Integer>(this.creaClassifica());
+		for (Team t1 : grafo.vertexSet()) {
+			for( Team t2: grafo.vertexSet()) {
+				if(!t1.equals(t2)) {
+					Integer punteggioT1= mappaTeamPunteggio.get(t1);
+					Integer punteggioT2 = mappaTeamPunteggio.get(t2);
+					Integer differenza = punteggioT1 - punteggioT2;
+					if(differenza > 0) {
+						Graphs.addEdgeWithVertices(grafo, t1, t2, differenza);
+					}
+					
+					if(differenza<0) {
+						Graphs.addEdgeWithVertices(grafo, t2, t1, -1 * differenza);
+					}
+					
+					
+				}
+				
+				
+			}
+			
+		}
 		
 		
 		
@@ -54,13 +77,18 @@ public class Model {
 		
 		return this.grafo.vertexSet().size();
 		
-		
-		
-		
-		
-		
-		
 	}
+	
+	
+	public int getNarchi() {
+		return this.grafo.edgeSet().size();
+	}
+	
+	
+	
+	
+	
+	
 	
 	public Map<Team,Integer> creaClassifica() {
 		
