@@ -5,9 +5,12 @@
 package it.polito.tdp.PremierLeague;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -53,6 +56,18 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	model.creaGrafo();
+    	txtResult.appendText("Grafo creato");
+    	txtResult.appendText("\n # VERTICI :"+model.getNVertici());
+    	model.creaClassifica();
+    	
+      txtResult.appendText("\n Classifica !!\n");
+    	Map<Team,Integer> result= new HashMap<Team, Integer>(model.creaClassifica());
+    	for(Team t : result.keySet()) {
+    		txtResult.appendText("\n"+ t+"  "+result.get(t));
+    	}
+    	
+    	
 
     }
 
